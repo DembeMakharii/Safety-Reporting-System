@@ -35,3 +35,12 @@ function login(email, password) {
     showAlert('Invalid email or password. Please try again.', 'error');
     return false;
 }
+
+
+function signup(userData) {
+    // Check if user already exists
+    const existingUser = users.find(u => u.email === userData.email);
+    if (existingUser) {
+        showAlert('An account with this email already exists.', 'error');
+        return false;
+    }
