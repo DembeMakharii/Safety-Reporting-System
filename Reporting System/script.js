@@ -21,3 +21,17 @@ const users = [
         department: 'safety'
     }
 ];
+
+// Authentication functions
+function login(email, password) {
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        showAlert('Login successful! Welcome back.', 'success', 'alertContainerMain');
+        return true;
+    }
+    
+    showAlert('Invalid email or password. Please try again.', 'error');
+    return false;
+}
