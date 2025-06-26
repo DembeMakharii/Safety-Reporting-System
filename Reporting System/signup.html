@@ -89,7 +89,7 @@
     <script src="script.js"></script>
     <script>
         
-    </script>
+    
 document.addEventListener('DOMContentLoaded', function() {
             // Check if user is already logged in
             if (currentUser) {
@@ -97,7 +97,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-
-    
+             // Form submission
+            document.getElementById('signupFormElement').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                const userData = {
+                    name: formData.get('name'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    confirmPassword: formData.get('confirmPassword'),
+                    department: formData.get('department'),
+                    role: formData.get('role')
+                };
+                
+                const success = signup(userData);
+                
+                if (success) {
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
