@@ -50,3 +50,23 @@ function signup(userData) {
         showAlert('Passwords do not match.', 'error');
         return false;
     }
+
+    // Create new user
+    const newUser = {
+        email: userData.email,
+        password: userData.password,
+        name: userData.name,
+        role: userData.role,
+        department: userData.department
+    };
+
+    users.push(newUser);
+    currentUser = newUser;
+    showAlert('Account created successfully! Welcome to the Safety Reporting System.', 'success', 'alertContainerMain');
+    return true;
+}
+
+function logout() {
+    currentUser = null;
+    window.location.href = 'login.html';
+}
