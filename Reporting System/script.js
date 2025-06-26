@@ -113,3 +113,14 @@ async function startCamera() {
         showAlert('Error accessing camera. Please ensure camera permissions are granted.', 'error', 'alertContainerMain');
     }
 }
+
+function stopCamera() {
+    if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        const video = document.getElementById('video');
+        video.srcObject = null;
+        video.style.display = 'none';
+        document.getElementById('captureControls').style.display = 'none';
+        document.getElementById('stopBtn').style.display = 'none';
+    }
+}
