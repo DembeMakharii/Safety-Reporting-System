@@ -100,3 +100,16 @@ async function startCamera() {
             } 
         });
         
+        const video = document.getElementById('video');
+        video.srcObject = stream;
+        video.style.display = 'block';
+        
+        document.getElementById('captureControls').style.display = 'block';
+        document.getElementById('stopBtn').style.display = 'inline-block';
+        
+        showAlert('Camera started successfully', 'success', 'alertContainerMain');
+    } catch (err) {
+        console.error('Error accessing camera:', err);
+        showAlert('Error accessing camera. Please ensure camera permissions are granted.', 'error', 'alertContainerMain');
+    }
+}
