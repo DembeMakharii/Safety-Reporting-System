@@ -44,3 +44,9 @@ function signup(userData) {
         showAlert('An account with this email already exists.', 'error');
         return false;
     }
+
+    // Validate password confirmation
+    if (userData.password !== userData.confirmPassword) {
+        showAlert('Passwords do not match.', 'error');
+        return false;
+    }
