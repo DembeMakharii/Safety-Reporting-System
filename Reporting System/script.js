@@ -124,3 +124,18 @@ function stopCamera() {
         document.getElementById('stopBtn').style.display = 'none';
     }
 }
+
+function capturePhoto() {
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const preview = document.getElementById('photoPreview');
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    capturedPhoto = canvas.toDataURL('image/jpeg');
+    preview.innerHTML = `<img src="${capturedPhoto}" alt="Captured photo">`;
+    
+    showAlert('Photo captured successfully', 'success', 'alertContainerMain');
+}
