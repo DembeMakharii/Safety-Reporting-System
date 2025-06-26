@@ -70,3 +70,21 @@ function logout() {
     currentUser = null;
     window.location.href = 'login.html';
 }
+
+// Utility functions
+function showAlert(message, type, containerId = 'alertContainer') {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    const alert = document.createElement('div');
+    alert.className = `alert alert-${type}`;
+    alert.textContent = message;
+    
+    container.innerHTML = '';
+    container.appendChild(alert);
+    
+    // Remove alert after 5 seconds
+    setTimeout(() => {
+        alert.remove();
+    }, 5000);
+}
