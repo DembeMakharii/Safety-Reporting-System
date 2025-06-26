@@ -168,3 +168,12 @@ function submitSafetyReport() {
     showAlert('Safety report submitted successfully!', 'success', 'alertContainerMain');
     displayReports();
 }
+
+function displayReports() {
+    const container = document.getElementById('reportsContainer');
+    if (!container) return;
+    
+    if (reports.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666;">No reports submitted yet</p>';
+        return;
+    }
