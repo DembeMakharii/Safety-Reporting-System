@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safety Reporting System</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Main Application -->
+    <div id="mainApp" class="container">
+        <div class="header">
+            <h1><i class="fas fa-exclamation-triangle"></i> Safety Reporting System</h1>
+            <p>Report safety hazards and substandard conditions instantly</p>
+            <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
+
+        <div class="main-content">
+            <div class="user-info">
+                <strong><i class="fas fa-user"></i> Welcome, <span id="userName"></span></strong>
+                <div style="font-size: 14px; margin-top: 5px;">
+                    <i class="fas fa-user-tag"></i> Role: <span id="userRole"></span> | 
+                    <i class="fas fa-building"></i> Department: <span id="userDepartment"></span>
+                </div>
+            </div>
+
+            <div id="safetyOfficerPanel" class="safety-officer-panel hidden">
+                <h3><i class="fas fa-shield-alt"></i> Safety Officer Dashboard</h3>
+                <p>You have additional privileges to manage and investigate safety reports.</p>
+            </div>
+
+            <div id="alertContainerMain"></div>
+
+            <form id="safetyReportForm">
+                <div class="section">
+                    <div class="form-group">
+                        <label for="location"><i class="fas fa-map-marker-alt"></i> Location/Area</label>
+                        <input type="text" id="location" name="location" required 
+                               placeholder="Building, floor, room, or area description">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="camera-section">
+                        <h3><i class="fas fa-camera"></i> Capture Evidence</h3>
+                        <p>Take a photo of the safety hazard or substandard condition</p>
+                        
+                        <div class="camera-controls">
+                            <button type="button" class="btn btn-secondary" onclick="startCamera()">
+                                <i class="fas fa-video"></i> Start Camera
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="stopCamera()" id="stopBtn" style="display:none;">
+                                <i class="fas fa-stop-circle"></i> Stop Camera
+                            </button>
+                        </div>
+
+                        <video id="video" autoplay style="display:none;"></video>
+                        <canvas id="canvas" style="display:none;"></canvas>
+                        
+                        <div class="camera-controls" id="captureControls" style="display:none;">
+                            <button type="button" class="btn" onclick="capturePhoto()">
+                                <i class="fas fa-camera"></i> Take Photo
+                            </button>
+                        </div>
+
+                        <div class="photo-preview" id="photoPreview"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="form-group">
+                        <label for="hazardType"><i class="fas fa-biohazard"></i> Type of Hazard/Issue</label>
+                        <select id="hazardType" name="hazardType" required>
+                            <option value="">Select hazard type</option>
+                            <option value="slip-fall"><i class="fas fa-walking"></i> Slip/Fall Hazard</option>
+                            <option value="electrical"><i class="fas fa-bolt"></i> Electrical Issue</option>
+                            <option value="chemical"><i class="fas fa-flask"></i> Chemical Spill/Leak</option>
+                            <option value="equipment"><i class="fas fa-cogs"></i> Equipment Malfunction</option>
+                            <option value="fire"><i class="fas fa-fire"></i> Fire Safety Issue</option>
+                            <option value="structural"><i class="fas fa-building"></i> Structural Damage</option>
+                            <option value="ergonomic"><i class="fas fa-chair"></i> Ergonomic Hazard</option>
+                            <option value="ppe"><i class="fas fa-hard-hat"></i> PPE Related</option>
+                            <option value="environmental"><i class="fas fa-leaf"></i> Environmental Concern</option>
+                            <option value="other"><i class="fas fa-exclamation"></i> Other</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-exclamation-circle"></i> Severity Level</label>
+                        <div class="severity-badges">
+                            <div class="severity-option">
+                                <input type="radio" id="severityLow" name="severity" value="low" class="severity-low">
+                                <label for="severityLow" class="severity-label"><i class="fas fa-check-circle"></i> Low</label>
+                            </div>
+                            <div class="severity-option">
+                                <input type="radio" id="severityMedium" name="severity" value="medium" class="severity-medium">
+                                <label for="severityMedium" class="severity-label"><i class="fas fa-exclamation"></i> Medium</label>
+                            </div>
+                            <div class="severity-option">
+                                <input type="radio" id="severityHigh" name="severity" value="high" class="severity-high">
+                                <label for="severityHigh" class="severity-label"><i class="fas fa-exclamation-triangle"></i> High</label>
+                            </div>
+                            <div class="severity-option">
+                                <input type="radio" id="severityCritical" name="severity" value="critical" class="severity-critical">
+                                <label for="severityCritical" class="severity-label"><i class="fas fa-skull-crossbones"></i> Critical</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description"><i class="fas fa-align-left"></i> Detailed Description</label>
+                        <textarea id="description" name="description" required 
+                                  placeholder="Describe the safety hazard, what you observed, potential risks, and any immediate actions taken..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="safetyOfficer"><i class="fas fa-user-shield"></i> Safety Officer</label>
+                        <select id="safetyOfficer" name="safetyOfficer" required>
+                            <option value="">Select safety officer</option>
+                            <option value="john.smith@company.com">John Smith - Building A</option>
+                            <option value="sarah.jones@company.com">Sarah Jones - Building B</option>
+                            <option value="mike.wilson@company.com">Mike Wilson - Manufacturing</option>
+                            <option value="lisa.brown@company.com">Lisa Brown - Warehouse</option>
+                            <option value="emergency@company.com">Emergency Contact</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="submit-section">
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-bell"></i> Submit Safety Report
+                    </button>
+                </div>
+            </form>
+
+            <div class="reports-section">
+                <h3><i class="fas fa-clipboard-list"></i> Recent Reports</h3>
+                <div id="reportsContainer">
+                    <p style="text-align: center; color: #666;">No reports submitted yet</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Update user info display
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.role.replace('_', ' ').toUpperCase();
+            document.getElementById('userDepartment').textContent = currentUser.department.toUpperCase();
+            
+            // Show safety officer panel if applicable
+            if (currentUser.role === 'safety_officer') {
+                document.getElementById('safetyOfficerPanel').classList.remove('hidden');
+            }
+            
+            displayReports();
+            
+            // Form submission
+            document.getElementById('safetyReportForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitSafetyReport();
+            });
+        });
+    </script>
+</body>
+</html>
