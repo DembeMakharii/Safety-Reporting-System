@@ -177,3 +177,24 @@ function displayReports() {
         container.innerHTML = '<p style="text-align: center; color: #666;">No reports submitted yet</p>';
         return;
     }
+
+    // Filter reports to show only those by current user unless they're a safety officer
+    let filteredReports = reports;
+    if (currentUser.role !== 'safety_officer') {
+        filteredReports = reports.filter(r => r.user === currentUser.email);
+    }
+    
+    container.innerHTML = filteredReports.map(report => `
+        <div class="report-item">
+            <div class="report-header">
+                <h4>${report.hazardType.replace('-', ' ').toUpperCase()}</h4>
+                <span class="severity-badge badge-${report.severity}">${report.severity.toUpperCase()}</span>
+            </div>
+            <p><strong>Location:</strong> ${report.location}</p>
+            <p><strong>Description:</strong> ${report.description}</p>
+            <p><strong>Reported by:</strong> ${report.userName}</p>
+            <p><strong>Date:</strong> ${new Date(report.date).toLocaleString()}</p>
+            ${report.photo ? `<div class="photo-preview"><img src="${report.photo}" alt="Report photo"></div>` : ''}
+        </div>
+    `).join('');
+}
