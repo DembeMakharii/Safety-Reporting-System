@@ -159,3 +159,12 @@ function submitSafetyReport() {
         status: 'pending'
     };
     
+    reports.push(report);
+    form.reset();
+    capturedPhoto = null;
+    document.getElementById('photoPreview').innerHTML = '';
+    stopCamera();
+    
+    showAlert('Safety report submitted successfully!', 'success', 'alertContainerMain');
+    displayReports();
+}
