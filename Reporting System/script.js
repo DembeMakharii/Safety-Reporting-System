@@ -139,3 +139,23 @@ function capturePhoto() {
     
     showAlert('Photo captured successfully', 'success', 'alertContainerMain');
 }
+
+// Report functions
+function submitSafetyReport() {
+    const form = document.getElementById('safetyReportForm');
+    const formData = new FormData(form);
+    
+    const report = {
+        id: Date.now(),
+        user: currentUser.email,
+        userName: currentUser.name,
+        location: formData.get('location'),
+        hazardType: formData.get('hazardType'),
+        severity: formData.get('severity'),
+        description: formData.get('description'),
+        safetyOfficer: formData.get('safetyOfficer'),
+        photo: capturedPhoto,
+        date: new Date().toISOString(),
+        status: 'pending'
+    };
+    
