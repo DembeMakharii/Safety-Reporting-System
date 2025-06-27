@@ -73,7 +73,6 @@
                         </div>
                     </div>
 
-                    
                     <button type="submit" class="auth-btn">
                         <i class="fas fa-check-circle"></i> Create Account
                     </button>
@@ -84,16 +83,15 @@
 
     <script src="script.js"></script>
     <script>
-        
-    
-document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is already logged in
-            if (currentUser) {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is already logged in from localStorage
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
                 window.location.href = 'index.html';
                 return;
             }
 
-             // Form submission
+            // Form submission
             document.getElementById('signupFormElement').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const formData = new FormData(this);
