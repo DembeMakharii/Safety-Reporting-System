@@ -1,11 +1,11 @@
 // Global variables
 let stream = null;
 let capturedPhoto = null;
-let reports = [];
-let currentUser = null;
+let reports = JSON.parse(localStorage.getItem('safetyReports')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
 
-// Demo users database (in real app, this would be server-side)
-const users = [
+// Demo users database (also stored in localStorage)
+let users = JSON.parse(localStorage.getItem('users')) || [
     {
         email: 'worker@company.com',
         password: 'password123',
@@ -22,12 +22,18 @@ const users = [
     }
 ];
 
+// Initialize localStorage with demo users if empty
+if (!localStorage.getItem('users')) {
+    localStorage.setItem('users', JSON.stringify(users));
+}
+
 // Authentication functions
 function login(email, password) {
     const user = users.find(u => u.email === email && u.password === password);
     
     if (user) {
         currentUser = user;
+        localStorage.setItem('currentUser', JSON.stringify(user));
         showAlert('Login successful! Welcome back.', 'success', 'alertContainerMain');
         return true;
     }
@@ -35,7 +41,6 @@ function login(email, password) {
     showAlert('Invalid email or password. Please try again.', 'error');
     return false;
 }
-
 
 function signup(userData) {
     // Check if user already exists
@@ -61,13 +66,16 @@ function signup(userData) {
     };
 
     users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
     currentUser = newUser;
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
     showAlert('Account created successfully! Welcome to the Safety Reporting System.', 'success', 'alertContainerMain');
     return true;
 }
 
 function logout() {
     currentUser = null;
+    localStorage.removeItem('currentUser');
     window.location.href = 'login.html';
 }
 
@@ -160,6 +168,7 @@ function submitSafetyReport() {
     };
     
     reports.push(report);
+    localStorage.setItem('safetyReports', JSON.stringify(reports));
     form.reset();
     capturedPhoto = null;
     document.getElementById('photoPreview').innerHTML = '';
@@ -180,7 +189,7 @@ function displayReports() {
 
     // Filter reports to show only those by current user unless they're a safety officer
     let filteredReports = reports;
-    if (currentUser.role !== 'safety_officer') {
+    if (currentUser && currentUser.role !== 'safety_officer') {
         filteredReports = reports.filter(r => r.user === currentUser.email);
     }
     
@@ -197,4 +206,9 @@ function displayReports() {
             ${report.photo ? `<div class="photo-preview"><img src="${report.photo}" alt="Report photo"></div>` : ''}
         </div>
     `).join('');
+}
+
+// Initialize reports display if on the right page
+if (document.getElementById('reportsContainer')) {
+    displayReports();
 }
